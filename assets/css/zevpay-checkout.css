@@ -1,0 +1,307 @@
+/**
+ * ZevPay Checkout Payment Page Styles
+ * Theme-compatible and responsive design
+ */
+
+/* Hide WooCommerce default order summary to avoid duplication */
+.woocommerce-order-details,
+.woocommerce-order-details__title,
+.woocommerce-order-overview,
+.woocommerce-order-overview__order,
+.woocommerce-order-overview__date,
+.woocommerce-order-overview__total,
+.woocommerce-order-overview__payment-method {
+    display: none !important;
+}
+
+.checkout-pay-page .woocommerce-order-details,
+.checkout-pay-page .woocommerce-order-overview {
+    display: none !important;
+}
+
+body.woocommerce-page .woocommerce-order-details,
+body.woocommerce-page .woocommerce-order-overview,
+body.woocommerce-page .woocommerce-order-details__title,
+body.woocommerce-page .woocommerce-order-overview__order,
+body.woocommerce-page .woocommerce-order-overview__date,
+body.woocommerce-page .woocommerce-order-overview__total,
+body.woocommerce-page .woocommerce-order-overview__payment-method {
+    display: none !important;
+}
+
+.woocommerce .woocommerce-order-details,
+.woocommerce .woocommerce-order-overview,
+.woocommerce table.order_details,
+.woocommerce .order_details {
+    display: none !important;
+}
+
+/* Container and Layout */
+.zevpay-checkout-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 24px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+/* Order Summary Section */
+.zevpay-order-summary {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 24px;
+}
+
+.zevpay-order-summary h3 {
+    margin: 0 0 16px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #212529;
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 12px;
+}
+
+.zevpay-order-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 16px;
+}
+
+.zevpay-order-item {
+    text-align: center;
+}
+
+.zevpay-order-item-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.zevpay-order-item-value {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    color: #212529;
+}
+
+.zevpay-order-item-value.zevpay-amount {
+    color: #0D9488;
+    font-size: 18px;
+}
+
+/* Payment Instructions */
+.zevpay-payment-instructions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding: 16px;
+    background: #e6f7f5;
+    border: 1px solid #99ddd6;
+    border-radius: 6px;
+    color: #0D5C55;
+}
+
+.zevpay-payment-instructions img {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.zevpay-payment-instructions p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+/* Action Buttons */
+.zevpay-action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.zevpay-pay-button {
+    background: linear-gradient(135deg, #0D9488 0%, #0A7A70 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 16px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 48px;
+}
+
+.zevpay-pay-button:hover {
+    background: linear-gradient(135deg, #0A7A70 0%, #086B63 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.zevpay-pay-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(13, 148, 136, 0.2);
+}
+
+.zevpay-pay-button:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.zevpay-pay-button .zevpay-loading {
+    display: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid transparent;
+    border-top: 2px solid #ffffff;
+    border-radius: 50%;
+    animation: zevpay-spin 1s linear infinite;
+}
+
+.zevpay-pay-button.loading .zevpay-loading {
+    display: block;
+}
+
+.zevpay-cancel-button {
+    background: transparent;
+    color: #6c757d;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 12px 24px;
+    font-size: 14px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.zevpay-cancel-button:hover {
+    background: #f8f9fa;
+    border-color: #adb5bd;
+    color: #495057;
+    text-decoration: none;
+}
+
+/* Loading Animation */
+@keyframes zevpay-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .zevpay-checkout-container {
+        margin: 0 16px;
+        padding: 20px;
+    }
+
+    .zevpay-order-details {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .zevpay-action-buttons {
+        gap: 10px;
+    }
+
+    .zevpay-pay-button {
+        padding: 14px 20px;
+        font-size: 15px;
+    }
+
+    .zevpay-cancel-button {
+        padding: 10px 20px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .zevpay-checkout-container {
+        margin: 0 12px;
+        padding: 16px;
+    }
+
+    .zevpay-order-details {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .zevpay-order-summary {
+        padding: 16px;
+    }
+
+    .zevpay-payment-instructions {
+        padding: 12px;
+        flex-direction: column;
+        text-align: center;
+        gap: 8px;
+    }
+}
+
+/* Theme Compatibility Overrides */
+.zevpay-checkout-container * {
+    box-sizing: border-box;
+}
+
+.zevpay-pay-button,
+.zevpay-cancel-button {
+    font-family: inherit;
+    line-height: 1.5;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .zevpay-pay-button {
+        background: #000000;
+        border: 2px solid #ffffff;
+    }
+
+    .zevpay-cancel-button {
+        border: 2px solid #000000;
+        color: #000000;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .zevpay-pay-button,
+    .zevpay-cancel-button {
+        transition: none;
+    }
+
+    .zevpay-pay-button:hover {
+        transform: none;
+    }
+
+    @keyframes zevpay-spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(0deg); }
+    }
+}
