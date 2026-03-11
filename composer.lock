@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "df6410d85e4985f2b215e1a7715547e4",
+    "content-hash": "9f058ed844fdde50fe8771a3dcc06feb",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -606,10 +606,16 @@
         {
             "name": "zevpay/zevpay-php",
             "version": "0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zevpay/zevpay-php.git",
+                "reference": "f138ea3cf274346b898e8072f6f2209ccdd83ecb"
+            },
             "dist": {
-                "type": "path",
-                "url": "../zevpay-php",
-                "reference": "85a4b7d5f0d0a2232b1d797435b8f61f469fe34e"
+                "type": "zip",
+                "url": "https://api.github.com/repos/zevpay/zevpay-php/zipball/f138ea3cf274346b898e8072f6f2209ccdd83ecb",
+                "reference": "f138ea3cf274346b898e8072f6f2209ccdd83ecb",
+                "shasum": ""
             },
             "require": {
                 "guzzlehttp/guzzle": "^7.0",
@@ -624,31 +630,24 @@
                     "ZevPay\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "ZevPay\\Tests\\": "tests/"
-                }
-            },
-            "scripts": {
-                "test": [
-                    "phpunit"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "description": "Official ZevPay PHP SDK for the Checkout REST API",
             "homepage": "https://docs.zevpaycheckout.com/sdks/php",
             "keywords": [
+                "Nigeria",
                 "checkout",
                 "fintech",
-                "nigeria",
                 "payments",
                 "zevpay"
             ],
-            "transport-options": {
-                "relative": true
-            }
+            "support": {
+                "issues": "https://github.com/zevpay/zevpay-php/issues",
+                "source": "https://github.com/zevpay/zevpay-php/tree/v0.1.0"
+            },
+            "time": "2026-03-11T02:39:20+00:00"
         }
     ],
     "packages-dev": [],

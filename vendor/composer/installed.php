@@ -3,7 +3,7 @@
         'name' => 'zevpay/zevpay-checkout-for-woocommerce',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '76b5407c0e4ad78b3a64cecd28d2620c6336477d',
+        'reference' => '213c9ca387cdeab5359b007fecb91e75bf4b29ab',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -103,7 +103,7 @@
         'zevpay/zevpay-checkout-for-woocommerce' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '76b5407c0e4ad78b3a64cecd28d2620c6336477d',
+            'reference' => '213c9ca387cdeab5359b007fecb91e75bf4b29ab',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -112,7 +112,7 @@
         'zevpay/zevpay-php' => array(
             'pretty_version' => '0.1.0',
             'version' => '0.1.0.0',
-            'reference' => '85a4b7d5f0d0a2232b1d797435b8f61f469fe34e',
+            'reference' => 'f138ea3cf274346b898e8072f6f2209ccdd83ecb',
             'type' => 'library',
             'install_path' => __DIR__ . '/../zevpay/zevpay-php',
             'aliases' => array(),
