@@ -327,6 +327,8 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 	public function process_payment( $order_id ) {
 		$order = wc_get_order( $order_id );
 
+		$this->log( sprintf( 'process_payment called for order %d. checkout_mode=%s', $order_id, $this->checkout_mode ) );
+
 		if ( 'standard' === $this->checkout_mode ) {
 			return $this->process_standard_payment( $order );
 		}
@@ -357,6 +359,8 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 	 * @return array
 	 */
 	protected function process_standard_payment( WC_Order $order ) {
+		$this->log( sprintf( 'process_standard_payment: order %d, secret_key=%s', $order->get_id(), substr( $this->secret_key, 0, 10 ) . '...' ) );
+
 		$reference = $this->ensure_order_reference( $order );
 		$order->save();
 
