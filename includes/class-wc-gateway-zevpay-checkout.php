@@ -508,6 +508,23 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 	public function receipt_page( $order_id ) {
 		$order = wc_get_order( $order_id );
 
+		// Standard mode: redirect to ZevPay hosted checkout instead of showing the pay button.
+		if ( 'standard' === $this->checkout_mode ) {
+			try {
+				$result = $this->process_standard_payment( $order );
+				if ( 'success' === $result['result'] && ! empty( $result['redirect'] ) ) {
+					wp_redirect( $result['redirect'] );
+					exit;
+				}
+			} catch ( \Exception $e ) {
+				$this->log( 'Receipt page standard redirect failed: ' . $e->getMessage() );
+			}
+			// If redirect failed, show a message.
+			echo '<p>' . esc_html__( 'Unable to redirect to payment page. Please try placing your order again.', 'zevpay-checkout-for-woocommerce' ) . '</p>';
+			echo '<p><a href="' . esc_url( wc_get_checkout_url() ) . '">' . esc_html__( 'Return to checkout', 'zevpay-checkout-for-woocommerce' ) . '</a></p>';
+			return;
+		}
+
 		wp_enqueue_style(
 			'zevpay-checkout-style',
 			ZEVPAY_CHECKOUT_URL . '/assets/css/zevpay-checkout.css',
