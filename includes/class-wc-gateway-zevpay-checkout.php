@@ -393,6 +393,21 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 				'order_key' => $order->get_order_key(),
 				'source'    => 'woocommerce',
 			);
+
+			// Extract order line items for detailed checkout layout
+			$line_items = array();
+			foreach ( $order->get_items() as $item ) {
+				$product    = $item->get_product();
+				$line_items[] = array(
+					'name'        => $item->get_name(),
+					'description' => $product ? wp_strip_all_tags( $product->get_short_description() ) : '',
+					'quantity'    => $item->get_quantity(),
+					'amount'      => (int) round( $item->get_total() * 100 ), // kobo
+				);
+			}
+			if ( ! empty( $line_items ) ) {
+				$params['line_items'] = $line_items;
+			}
 		}
 
 		try {
@@ -401,8 +416,8 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 
 			$this->log( 'Standard session initialized: ' . wp_json_encode( $session ) );
 
-			$checkout_url = isset( $session['data']['checkout_url'] ) ? $session['data']['checkout_url'] : '';
-			$session_id   = isset( $session['data']['session_id'] ) ? $session['data']['session_id'] : '';
+			$checkout_url = isset( $session['checkout_url'] ) ? $session['checkout_url'] : '';
+			$session_id   = isset( $session['session_id'] ) ? $session['session_id'] : '';
 
 			if ( ! $checkout_url ) {
 				wc_add_notice( __( 'Unable to initialize checkout session. Please try again.', 'zevpay-checkout-for-woocommerce' ), 'error' );
@@ -614,7 +629,7 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 
 			$this->log( 'Inline verification response: ' . wp_json_encode( $response ) );
 
-			$session_data = isset( $response['data'] ) ? $response['data'] : array();
+			$session_data = $response;
 			$status       = isset( $session_data['status'] ) ? $session_data['status'] : '';
 
 			if ( 'completed' !== $status ) {
@@ -674,7 +689,7 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 
 				$this->log( 'Standard callback verification: ' . wp_json_encode( $response ) );
 
-				$session_data = isset( $response['data'] ) ? $response['data'] : array();
+				$session_data = $response;
 				$status       = isset( $session_data['status'] ) ? $session_data['status'] : '';
 
 				if ( 'completed' === $status ) {
@@ -753,7 +768,7 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 				$client   = $this->get_zevpay_client();
 				$response = $client->checkout->verify( $session_id );
 
-				$session_data = isset( $response['data'] ) ? $response['data'] : array();
+				$session_data = $response;
 				$status       = isset( $session_data['status'] ) ? $session_data['status'] : '';
 
 				if ( 'completed' !== $status ) {
