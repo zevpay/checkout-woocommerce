@@ -402,7 +402,7 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 					'name'        => $item->get_name(),
 					'description' => $product ? wp_strip_all_tags( $product->get_short_description() ) : '',
 					'quantity'    => $item->get_quantity(),
-					'amount'      => (int) round( $item->get_total() * 100 ), // kobo
+					'amount'      => (int) round( ( $item->get_total() / max( $item->get_quantity(), 1 ) ) * 100 ), // unit price in kobo
 				);
 			}
 			if ( ! empty( $line_items ) ) {
