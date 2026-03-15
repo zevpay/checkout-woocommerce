@@ -83,19 +83,19 @@
 	 * Open the ZevPay checkout modal.
 	 */
 	function openCheckout() {
-		if ( typeof window.ZevPayCheckout === 'undefined' ) {
+		if ( typeof window.ZevPay === 'undefined' || typeof window.ZevPay.ZevPayCheckout === 'undefined' ) {
 			alert( 'ZevPay SDK not loaded. Please refresh the page.' );
 			return;
 		}
 
 		var checkoutConfig = {
-			key: params.publicKey,
+			apiKey: params.publicKey,
 			email: params.email,
 			amount: parseInt( params.amount, 10 ),
 			currency: params.currency || 'NGN',
 			reference: params.reference || '',
-			first_name: params.firstName || '',
-			last_name: params.lastName || '',
+			firstName: params.firstName || '',
+			lastName: params.lastName || '',
 			metadata: params.metadata ? JSON.parse( params.metadata ) : {},
 			onSuccess: function( response ) {
 				handleSuccess( response );
@@ -108,12 +108,12 @@
 
 		// Add payment methods if configured.
 		if ( params.paymentMethods && params.paymentMethods !== 'all' ) {
-			checkoutConfig.payment_methods = params.paymentMethods;
+			checkoutConfig.paymentMethods = params.paymentMethods;
 		}
 
 		try {
-			var handler = new window.ZevPayCheckout( checkoutConfig );
-			handler.openIframe();
+			var handler = new window.ZevPay.ZevPayCheckout();
+			handler.checkout( checkoutConfig );
 		} catch ( e ) {
 			setButtonState( false );
 			alert( 'Error opening checkout: ' + e.message );
