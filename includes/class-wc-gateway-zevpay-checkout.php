@@ -397,8 +397,8 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 
 			$this->log( 'Standard session initialized: ' . wp_json_encode( $session ) );
 
-			$checkout_url = isset( $session['data']['checkout_url'] ) ? $session['data']['checkout_url'] : '';
-			$session_id   = isset( $session['data']['session_id'] ) ? $session['data']['session_id'] : '';
+			$checkout_url = isset( $session['checkout_url'] ) ? $session['checkout_url'] : '';
+			$session_id   = isset( $session['session_id'] ) ? $session['session_id'] : '';
 
 			if ( ! $checkout_url ) {
 				wc_add_notice( __( 'Unable to initialize checkout session. Please try again.', 'zevpay-checkout-for-woocommerce' ), 'error' );
@@ -593,15 +593,14 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 
 			$this->log( 'Inline verification response: ' . wp_json_encode( $response ) );
 
-			$session_data = isset( $response['data'] ) ? $response['data'] : array();
-			$status       = isset( $session_data['status'] ) ? $session_data['status'] : '';
+			$status = isset( $response['status'] ) ? $response['status'] : '';
 
 			if ( 'completed' !== $status ) {
 				$this->log( sprintf( 'Inline verification: session not completed. status=%s', $status ) );
 				wp_send_json_error( array( 'message' => __( 'Payment not completed. Please try again.', 'zevpay-checkout-for-woocommerce' ) ), 402 );
 			}
 
-			$finalize = $this->finalize_order_payment( $order, $session_data );
+			$finalize = $this->finalize_order_payment( $order, $response );
 
 			if ( is_wp_error( $finalize ) ) {
 				$this->log( 'Order finalization error: ' . $finalize->get_error_message() );
@@ -653,11 +652,10 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 
 				$this->log( 'Standard callback verification: ' . wp_json_encode( $response ) );
 
-				$session_data = isset( $response['data'] ) ? $response['data'] : array();
-				$status       = isset( $session_data['status'] ) ? $session_data['status'] : '';
+				$status = isset( $response['status'] ) ? $response['status'] : '';
 
 				if ( 'completed' === $status ) {
-					$this->finalize_order_payment( $order, $session_data );
+					$this->finalize_order_payment( $order, $response );
 					$this->log( sprintf( 'Payment verified for order %d via standard callback.', $order_id ) );
 				} else {
 					$this->log( sprintf( 'Standard callback: session not completed. status=%s', $status ) );
@@ -732,8 +730,7 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 				$client   = $this->get_zevpay_client();
 				$response = $client->checkout->verify( $session_id );
 
-				$session_data = isset( $response['data'] ) ? $response['data'] : array();
-				$status       = isset( $session_data['status'] ) ? $session_data['status'] : '';
+				$status = isset( $response['status'] ) ? $response['status'] : '';
 
 				if ( 'completed' !== $status ) {
 					$this->log( sprintf( 'Webhook: session verification returned status=%s for order %d.', $status, $order_id ) );
@@ -742,7 +739,7 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 					exit;
 				}
 
-				$transaction = $session_data;
+				$transaction = $response;
 			} catch ( \Exception $e ) {
 				$this->log( 'Webhook: session verification failed: ' . $e->getMessage() );
 				// Fall back to the webhook payload.
