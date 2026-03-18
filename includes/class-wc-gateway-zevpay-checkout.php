@@ -495,7 +495,7 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 			'orderId'        => $order->get_id(),
 			'nonce'          => wp_create_nonce( 'zevpay_checkout_verify_' . $order->get_id() ),
 			'metadata'       => wp_json_encode( $metadata ),
-			'logoUrl'        => ZEVPAY_CHECKOUT_URL . '/assets/images/zevpay.png',
+			'logoUrl'        => ZEVPAY_CHECKOUT_URL . '/assets/images/zevpay.svg',
 			'ajaxUrl'        => WC()->api_request_url( 'wc_gateway_zevpay_checkout' ),
 			'orderUrl'       => $this->get_return_url( $order ),
 			'cancelUrl'      => $order->get_cancel_order_url(),
@@ -572,7 +572,7 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 			</div>
 
 			<div class="zevpay-payment-instructions">
-				<img src="<?php echo esc_url( ZEVPAY_CHECKOUT_URL . '/assets/images/zevpay.png' ); ?>" alt="ZevPay" />
+				<img src="<?php echo esc_url( ZEVPAY_CHECKOUT_URL . '/assets/images/zevpay.svg' ); ?>" alt="ZevPay" />
 				<p><?php esc_html_e( 'Click the button below to complete your payment with ZevPay Checkout.', 'zevpay-checkout-for-woocommerce' ); ?></p>
 			</div>
 
@@ -657,8 +657,10 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 	 * Handle standard checkout callback (customer returning from hosted page).
 	 */
 	public function handle_standard_callback() {
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Redirect from external payment provider; nonce not applicable.
 		$order_id  = isset( $_GET['order_id'] ) ? absint( $_GET['order_id'] ) : 0;
 		$order_key = isset( $_GET['order_key'] ) ? sanitize_text_field( wp_unslash( $_GET['order_key'] ) ) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		if ( ! $order_id || ! $order_key ) {
 			$this->log( 'Standard callback: missing order_id or order_key.' );
@@ -907,7 +909,7 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 	protected function get_zevpay_client() {
 		if ( null === $this->zevpay_client ) {
 			if ( empty( $this->secret_key ) ) {
-				throw new \Exception( __( 'Missing ZevPay secret key.', 'zevpay-checkout-for-woocommerce' ) );
+				throw new \Exception( esc_html__( 'Missing ZevPay secret key.', 'zevpay-checkout-for-woocommerce' ) );
 			}
 
 			$this->zevpay_client = new \ZevPay\ZevPay( $this->secret_key );
