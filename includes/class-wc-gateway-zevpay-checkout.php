@@ -96,7 +96,7 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 		$this->method_description = __( 'Accept bank transfer, PayID, and card payments with ZevPay Checkout.', 'zevpay-checkout-for-woocommerce' );
 		$this->has_fields         = false;
 		$this->supports           = array( 'products' );
-		$this->icon               = ZEVPAY_CHECKOUT_URL . '/assets/images/zevpay.svg';
+		$this->icon               = ZEVPAY_CHECKOUT_URL . '/assets/images/zevpay-icon.png';
 
 		$this->init_form_fields();
 		$this->init_settings();
@@ -495,7 +495,7 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 			'orderId'        => $order->get_id(),
 			'nonce'          => wp_create_nonce( 'zevpay_checkout_verify_' . $order->get_id() ),
 			'metadata'       => wp_json_encode( $metadata ),
-			'logoUrl'        => ZEVPAY_CHECKOUT_URL . '/assets/images/zevpay.svg',
+			'logoUrl'        => ZEVPAY_CHECKOUT_URL . '/assets/images/zevpay-icon.png',
 			'ajaxUrl'        => WC()->api_request_url( 'wc_gateway_zevpay_checkout' ),
 			'orderUrl'       => $this->get_return_url( $order ),
 			'cancelUrl'      => $order->get_cancel_order_url(),
@@ -572,7 +572,7 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 			</div>
 
 			<div class="zevpay-payment-instructions">
-				<img src="<?php echo esc_url( ZEVPAY_CHECKOUT_URL . '/assets/images/zevpay.svg' ); ?>" alt="ZevPay" />
+				<img src="<?php echo esc_url( ZEVPAY_CHECKOUT_URL . '/assets/images/zevpay-icon.png' ); ?>" alt="ZevPay" />
 				<p><?php esc_html_e( 'Click the button below to complete your payment with ZevPay Checkout.', 'zevpay-checkout-for-woocommerce' ); ?></p>
 			</div>
 

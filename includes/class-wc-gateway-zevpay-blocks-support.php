@@ -91,7 +91,7 @@ class WC_Gateway_ZevPay_Blocks_Support extends AbstractPaymentMethodType {
 			'title'          => $gateway->get_title(),
 			'description'    => $gateway->get_description(),
 			'supports'       => array_filter( $gateway->supports, array( $gateway, 'supports' ) ),
-			'logoUrl'        => ZEVPAY_CHECKOUT_URL . '/assets/images/zevpay.svg',
+			'logoUrl'        => ZEVPAY_CHECKOUT_URL . '/assets/images/zevpay-icon.png',
 			'publicKey'      => $gateway->public_key,
 			'isEnabled'      => $gateway->is_available(),
 			'checkoutMode'   => $gateway->checkout_mode,
