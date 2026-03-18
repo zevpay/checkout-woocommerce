@@ -96,7 +96,7 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 		$this->method_description = __( 'Accept bank transfer, PayID, and card payments with ZevPay Checkout.', 'zevpay-checkout-for-woocommerce' );
 		$this->has_fields         = false;
 		$this->supports           = array( 'products' );
-		$this->icon               = ZEVPAY_CHECKOUT_URL . '/assets/images/zevpay.png';
+		$this->icon               = ZEVPAY_CHECKOUT_URL . '/assets/images/zevpay.svg';
 
 		$this->init_form_fields();
 		$this->init_settings();
