@@ -7,11 +7,12 @@
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            ZevPay
- * Author URI:        https://zevpay.ng
+ * Author URI:        https://zevpay.africa
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       zevpay-checkout-for-woocommerce
  * Domain Path:       /languages
+ * Requires Plugins:  woocommerce
  * WC requires at least: 7.0
  * WC tested up to:   9.6
  */
@@ -35,12 +36,7 @@ function zevpay_checkout_init() {
 		return;
 	}
 
-	// Load the PHP SDK autoloader.
-	$autoloader = ZEVPAY_CHECKOUT_PATH . 'vendor/autoload.php';
-	if ( file_exists( $autoloader ) ) {
-		require_once $autoloader;
-	}
-
+	require_once ZEVPAY_CHECKOUT_PATH . 'includes/class-zevpay-checkout-api-client.php';
 	require_once ZEVPAY_CHECKOUT_PATH . 'includes/class-wc-gateway-zevpay-checkout.php';
 
 	add_filter( 'woocommerce_payment_gateways', 'zevpay_checkout_register_gateway' );

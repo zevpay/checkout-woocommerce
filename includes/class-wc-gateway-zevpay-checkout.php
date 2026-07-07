@@ -68,9 +68,9 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 	protected $logger;
 
 	/**
-	 * ZevPay PHP SDK client instance.
+	 * ZevPay API client instance.
 	 *
-	 * @var \ZevPay\ZevPay|null
+	 * @var ZevPay_Checkout_API_Client|null
 	 */
 	protected $zevpay_client;
 
@@ -141,7 +141,7 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 		</h2>
 
 		<p style="margin-top:0;">
-			<a href="https://zevpay.ng" target="_blank"
+			<a href="https://zevpay.africa" target="_blank"
 				rel="noopener noreferrer"><?php esc_html_e( 'ZevPay', 'zevpay-checkout-for-woocommerce' ); ?></a>
 			<span style="margin: 0 8px;">|</span>
 			<a href="https://docs.zevpaycheckout.com" target="_blank"
@@ -359,7 +359,7 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 	 * @return array
 	 */
 	protected function process_standard_payment( WC_Order $order ) {
-		$this->log( sprintf( 'process_standard_payment: order %d, secret_key=%s', $order->get_id(), substr( $this->secret_key, 0, 10 ) . '...' ) );
+		$this->log( sprintf( 'process_standard_payment: order %d', $order->get_id() ) );
 
 		$reference = $this->ensure_order_reference( $order );
 		$order->save();
@@ -412,7 +412,7 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 
 		try {
 			$client  = $this->get_zevpay_client();
-			$session = $client->checkout->initialize( $params );
+			$session = $client->initialize_session( $params );
 
 			$this->log( 'Standard session initialized: ' . wp_json_encode( $session ) );
 
@@ -528,7 +528,7 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 			try {
 				$result = $this->process_standard_payment( $order );
 				if ( 'success' === $result['result'] && ! empty( $result['redirect'] ) ) {
-					wp_redirect( $result['redirect'] );
+					wp_redirect( $result['redirect'] ); // phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect -- Intentional redirect to the external ZevPay hosted checkout page.
 					exit;
 				}
 			} catch ( \Exception $e ) {
@@ -622,10 +622,10 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 			wp_send_json_error( array( 'message' => __( 'Missing payment reference.', 'zevpay-checkout-for-woocommerce' ) ), 400 );
 		}
 
-		// Verify the session via the PHP SDK.
+		// Verify the session with the ZevPay API.
 		try {
 			$client   = $this->get_zevpay_client();
-			$response = $client->checkout->verify( $session_id );
+			$response = $client->verify_session( $session_id );
 
 			$this->log( 'Inline verification response: ' . wp_json_encode( $response ) );
 
@@ -687,7 +687,7 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 		if ( $session_id ) {
 			try {
 				$client   = $this->get_zevpay_client();
-				$response = $client->checkout->verify( $session_id );
+				$response = $client->verify_session( $session_id );
 
 				$this->log( 'Standard callback verification: ' . wp_json_encode( $response ) );
 
@@ -729,9 +729,9 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 			exit;
 		}
 
-		// Verify signature via PHP SDK.
+		// Verify the HMAC signature before trusting the payload.
 		try {
-			$event = \ZevPay\Webhook::constructEvent( $payload, $signature, $this->webhook_secret );
+			$event = ZevPay_Checkout_API_Client::construct_webhook_event( $payload, $signature, $this->webhook_secret );
 		} catch ( \Exception $e ) {
 			$this->log( 'Webhook rejected: ' . $e->getMessage() );
 			http_response_code( 401 );
@@ -762,13 +762,13 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 			exit;
 		}
 
-		// Verify the session via SDK for extra safety.
+		// Verify the session with the ZevPay API for extra safety.
 		$session_id = $order->get_meta( '_zevpay_checkout_session_id' );
 
 		if ( $session_id ) {
 			try {
 				$client   = $this->get_zevpay_client();
-				$response = $client->checkout->verify( $session_id );
+				$response = $client->verify_session( $session_id );
 
 				$session_data = $response;
 				$status       = isset( $session_data['status'] ) ? $session_data['status'] : '';
@@ -901,9 +901,9 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * Get or create a ZevPay PHP SDK client instance.
+	 * Get or create a ZevPay API client instance.
 	 *
-	 * @return \ZevPay\ZevPay
+	 * @return ZevPay_Checkout_API_Client
 	 * @throws \Exception If secret key is missing.
 	 */
 	protected function get_zevpay_client() {
@@ -912,7 +912,7 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 				throw new \Exception( esc_html__( 'Missing ZevPay secret key.', 'zevpay-checkout-for-woocommerce' ) );
 			}
 
-			$this->zevpay_client = new \ZevPay\ZevPay( $this->secret_key );
+			$this->zevpay_client = new ZevPay_Checkout_API_Client( $this->secret_key );
 		}
 
 		return $this->zevpay_client;
