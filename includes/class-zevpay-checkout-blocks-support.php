@@ -7,12 +7,12 @@ use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodTyp
 /**
  * WooCommerce Blocks payment method integration for ZevPay Checkout.
  */
-class WC_Gateway_ZevPay_Blocks_Support extends AbstractPaymentMethodType {
+class ZevPay_Checkout_Blocks_Support extends AbstractPaymentMethodType {
 
 	/**
 	 * Gateway instance.
 	 *
-	 * @var WC_Gateway_ZevPay_Checkout|null
+	 * @var ZevPay_Checkout_Gateway|null
 	 */
 	protected $gateway_instance;
 
@@ -65,14 +65,14 @@ class WC_Gateway_ZevPay_Blocks_Support extends AbstractPaymentMethodType {
 			);
 
 		wp_register_script(
-			'wc-zevpay-checkout-blocks',
+			'zevpay-checkout-blocks',
 			$script_url,
 			$asset['dependencies'],
 			$asset['version'],
 			true
 		);
 
-		return array( 'wc-zevpay-checkout-blocks' );
+		return array( 'zevpay-checkout-blocks' );
 	}
 
 	/**
@@ -102,7 +102,7 @@ class WC_Gateway_ZevPay_Blocks_Support extends AbstractPaymentMethodType {
 	/**
 	 * Retrieve the concrete gateway instance.
 	 *
-	 * @return WC_Gateway_ZevPay_Checkout|false
+	 * @return ZevPay_Checkout_Gateway|false
 	 */
 	protected function get_gateway() {
 		if ( null !== $this->gateway_instance ) {

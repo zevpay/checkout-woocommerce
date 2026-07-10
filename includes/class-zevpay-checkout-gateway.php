@@ -9,7 +9,7 @@ defined('ABSPATH') || exit;
  * - Inline: opens the ZevPay modal on the order-pay page.
  * - Standard: redirects the customer to the ZevPay hosted checkout page.
  */
-class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
+class ZevPay_Checkout_Gateway extends WC_Payment_Gateway {
 
 	/**
 	 * API public key.
@@ -117,7 +117,7 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'payment_scripts' ) );
 		add_action( 'woocommerce_receipt_' . $this->id, array( $this, 'receipt_page' ) );
-		add_action( 'woocommerce_api_wc_gateway_zevpay_checkout', array( $this, 'handle_checkout_callback' ) );
+		add_action( 'woocommerce_api_zevpay_checkout_inline_callback', array( $this, 'handle_checkout_callback' ) );
 		add_action( 'woocommerce_api_zevpay_checkout_webhook', array( $this, 'handle_webhook' ) );
 		add_action( 'woocommerce_api_zevpay_checkout_standard_callback', array( $this, 'handle_standard_callback' ) );
 
@@ -264,9 +264,22 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 
 	/**
 	 * Show admin warnings.
+	 *
+	 * Scoped narrowly (Guideline 11: don't hijack the dashboard):
+	 * only for users who can manage WooCommerce, and only on
+	 * WooCommerce screens where the misconfiguration is actionable.
 	 */
 	public function admin_notices() {
 		if ( 'yes' !== $this->enabled ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			return;
+		}
+
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		if ( ! $screen || false === strpos( (string) $screen->id, 'woocommerce' ) ) {
 			return;
 		}
 
@@ -496,7 +509,7 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 			'nonce'          => wp_create_nonce( 'zevpay_checkout_verify_' . $order->get_id() ),
 			'metadata'       => wp_json_encode( $metadata ),
 			'logoUrl'        => ZEVPAY_CHECKOUT_URL . '/assets/images/zevpay-icon.png',
-			'ajaxUrl'        => WC()->api_request_url( 'wc_gateway_zevpay_checkout' ),
+			'ajaxUrl'        => WC()->api_request_url( 'zevpay_checkout_inline_callback' ),
 			'orderUrl'       => $this->get_return_url( $order ),
 			'cancelUrl'      => $order->get_cancel_order_url(),
 			'payButtonText'  => __( 'Pay with ZevPay', 'zevpay-checkout-for-woocommerce' ),
@@ -506,13 +519,13 @@ class WC_Gateway_ZevPay_Checkout extends WC_Payment_Gateway {
 
 		wp_enqueue_script( 'jquery' );
 		wp_enqueue_script(
-			'wc-zevpay-checkout',
+			'zevpay-checkout',
 			ZEVPAY_CHECKOUT_URL . '/assets/js/zevpay-checkout.js',
 			array( 'jquery' ),
 			ZEVPAY_CHECKOUT_VERSION,
 			true
 		);
-		wp_localize_script( 'wc-zevpay-checkout', 'wc_zevpay_checkout_params', $params );
+		wp_localize_script( 'zevpay-checkout', 'zevpay_checkout_params', $params );
 	}
 
 	/**

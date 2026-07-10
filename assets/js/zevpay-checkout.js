@@ -7,15 +7,15 @@
  * @package ZevPay_Checkout_For_WooCommerce
  */
 
-/* global jQuery, wc_zevpay_checkout_params */
+/* global jQuery, zevpay_checkout_params */
 ( function( $ ) {
 	'use strict';
 
-	if ( typeof wc_zevpay_checkout_params === 'undefined' ) {
+	if ( typeof zevpay_checkout_params === 'undefined' ) {
 		return;
 	}
 
-	var params    = wc_zevpay_checkout_params;
+	var params    = zevpay_checkout_params;
 	var sdkLoaded = false;
 	var sdkUrl    = 'https://js.zevpaycheckout.com/v1/inline.js';
 

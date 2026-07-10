@@ -37,7 +37,7 @@ function zevpay_checkout_init() {
 	}
 
 	require_once ZEVPAY_CHECKOUT_PATH . 'includes/class-zevpay-checkout-api-client.php';
-	require_once ZEVPAY_CHECKOUT_PATH . 'includes/class-wc-gateway-zevpay-checkout.php';
+	require_once ZEVPAY_CHECKOUT_PATH . 'includes/class-zevpay-checkout-gateway.php';
 
 	add_filter( 'woocommerce_payment_gateways', 'zevpay_checkout_register_gateway' );
 }
@@ -49,7 +49,7 @@ function zevpay_checkout_init() {
  * @return array
  */
 function zevpay_checkout_register_gateway( $gateways ) {
-	$gateways[] = 'WC_Gateway_ZevPay_Checkout';
+	$gateways[] = 'ZevPay_Checkout_Gateway';
 	return $gateways;
 }
 
@@ -81,12 +81,12 @@ add_action( 'woocommerce_blocks_loaded', function () {
 		return;
 	}
 
-	require_once ZEVPAY_CHECKOUT_PATH . 'includes/class-wc-gateway-zevpay-blocks-support.php';
+	require_once ZEVPAY_CHECKOUT_PATH . 'includes/class-zevpay-checkout-blocks-support.php';
 
 	add_action(
 		'woocommerce_blocks_payment_method_type_registration',
 		function ( \Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry $registry ) {
-			$registry->register( new WC_Gateway_ZevPay_Blocks_Support() );
+			$registry->register( new ZevPay_Checkout_Blocks_Support() );
 		}
 	);
 } );
