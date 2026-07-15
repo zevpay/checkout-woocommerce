@@ -90,9 +90,10 @@ Create a merchant account at [zevpaycheckout.com](https://zevpaycheckout.com), c
 
 == Screenshots ==
 
-1. Plugin settings page
-2. Inline checkout modal on the payment page
-3. Standard checkout redirect flow
+1. Gateway settings under WooCommerce > Settings > Payments
+2. Inline checkout: customers pay in a modal without leaving your site
+3. Standard checkout: redirect to the ZevPay hosted payment page
+4. ZevPay dashboard: track payments and settlements
 
 == Changelog ==
 
