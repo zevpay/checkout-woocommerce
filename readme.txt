@@ -1,5 +1,5 @@
 === ZevPay Checkout for WooCommerce ===
-Contributors: arowolodaniel
+Contributors: arowolodaniel, zevop
 Tags: payments, payment gateway, nigeria, bank transfer, woocommerce
 Requires at least: 5.8
 Tested up to: 7.0
